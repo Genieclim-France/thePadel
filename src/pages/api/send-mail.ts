@@ -56,12 +56,6 @@ export const POST: APIRoute = async ({ request }) => {
       `,
     };
 
-    console.log("Envoi email vers Brevo:", {
-      to: import.meta.env.BREVO_EMAIL,
-      replyTo: body.email,
-      subject: payload.subject,
-    });
-
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -75,7 +69,6 @@ export const POST: APIRoute = async ({ request }) => {
     const responseData = await res.json();
 
     if (res.ok) {
-      console.log("Email envoyé avec succès:", responseData);
       return new Response(
         JSON.stringify({ success: true, messageId: responseData.messageId }),
         {
@@ -83,7 +76,6 @@ export const POST: APIRoute = async ({ request }) => {
         }
       );
     } else {
-      console.error("Erreur Brevo:", res.status, responseData);
       return new Response(
         JSON.stringify({
           success: false,
@@ -94,7 +86,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
   } catch (error) {
-    console.error("Erreur lors de l'envoi:", error);
     return new Response(
       JSON.stringify({
         success: false,
